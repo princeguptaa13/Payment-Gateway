@@ -1,16 +1,15 @@
 package com.Project.Payment_Gateway.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
-@Table
+@Table(name = "payment_orders")
 public class PaymentOrder {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
     private String email;
     private String phone;
@@ -19,13 +18,14 @@ public class PaymentOrder {
     private String orderId;
     private String paymentId;
     private String status;
+    @Column(name = "created_at")
     private LocalDate createdAt;
 
     public PaymentOrder(){
 
     }
 
-    public PaymentOrder(Double amount, LocalDate createdAt, String email, String id, String name, String orderId, String paymentId, String phone, String service, String status) {
+    public PaymentOrder(Double amount, LocalDate createdAt, String email, Long id, String name, String orderId, String paymentId, String phone, String service, String status) {
         this.amount = amount;
         this.createdAt = createdAt;
         this.email = email;
@@ -62,11 +62,11 @@ public class PaymentOrder {
         this.email = email;
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

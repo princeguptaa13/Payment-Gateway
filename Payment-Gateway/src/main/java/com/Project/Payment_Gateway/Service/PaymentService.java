@@ -16,21 +16,22 @@ import java.util.UUID;
 @Service
 public class PaymentService {
 
-    @Value("{razorpay.key_id}")
+    @Value("${razorpay.key_id}")
     private String keyId;
-    @Value("{razorpay.key_secret}")
+    @Value("${razorpay.key_secret}")
     private String keySecret;
 
     @Autowired
     private PaymentRepository paymentRepository;
 
-    private String createOrder(PaymentOrder orderDetails) throws RazorpayException {
+    public String createOrder(PaymentOrder orderDetails) throws RazorpayException {
+        System.out.println("Inside service layer .. ");
         RazorpayClient client = new RazorpayClient(keyId , keySecret);
 
         //json creation
         JSONObject orderRequest = new JSONObject();
-        orderRequest.put("amount" , orderDetails.getAmount()*100);
-        orderRequest.put("Currency" , "INR");
+        orderRequest.put("amount" , (int)(orderDetails.getAmount()*100));
+        orderRequest.put("currency" , "INR");
         orderRequest.put("receipt" , "txn_"+ UUID.randomUUID());
 
         Order razorpayOrder = client.orders.create(orderRequest);
