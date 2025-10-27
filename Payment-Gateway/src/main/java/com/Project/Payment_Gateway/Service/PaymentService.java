@@ -24,6 +24,9 @@ public class PaymentService {
     @Autowired
     private PaymentRepository paymentRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     public String createOrder(PaymentOrder orderDetails) throws RazorpayException {
         System.out.println("Inside service layer .. ");
         RazorpayClient client = new RazorpayClient(keyId , keySecret);
@@ -44,5 +47,15 @@ public class PaymentService {
 
         paymentRepository.save(orderDetails);
         return razorpayOrder.toString();
+    }
+
+    public void updateOrderStatus(String paymentId, String orderId, String status) {
+        PaymentOrder order = paymentRepository.findByOrderId(orderId);
+        order.setPaymentId(paymentId);
+        order.setStatus(status);
+        paymentRepository.save(order);
+        if("SUCCESS".equalsIgnoreCase(order.getStatus())){
+            emailService.sendEmail(order.getEmail(),order.getName(),order.getService(),order.getAmount());
+        }
     }
 }
